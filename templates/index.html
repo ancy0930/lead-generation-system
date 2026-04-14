@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UAE Lead Generation & Customer Acquisition System</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <meta name="description" content="Capture, manage, and convert leads effectively with our automated lead generation system.">
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="bg-glow right"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="benefit-icon"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                Lead<span>Gen</span>
+            </div>
+            <a href="/admin/" style="color: var(--text-secondary); text-decoration: none; font-weight: 600; transition: color 0.3s; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);">Login</a>
+        </header>
+
+        <main class="hero">
+            <div class="hero-content">
+                <h1>Get Daily<br>Customer Leads</h1>
+                <p>Automate your customer acquisition. Capture prospects, engage instantly via WhatsApp, and manage your pipeline effortlessly.</p>
+                
+                <div class="benefits">
+                    <div class="benefit-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Instant Notifications
+                    </div>
+                    <div class="benefit-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Smart Dashboard
+                    </div>
+                    <div class="benefit-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        Higher Conversion
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <div class="form-header">
+                    <h3>Get a Free Demo</h3>
+                    <p>Enter your details below to see how it works</p>
+                </div>
+
+                <form id="leadForm">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required placeholder="John Doe">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">WhatsApp Number</label>
+                        <input type="tel" id="phone" required placeholder="+971 50 123 4567">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required placeholder="john@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="business_type">Your Industry</label>
+                        <select id="business_type" required style="appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem top 50%; background-size: 0.65rem auto;">
+                            <option value="">Select an option...</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="E-Commerce">E-Commerce</option>
+                            <option value="Agency">Agency / Services</option>
+                            <option value="Retail">Retail</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Hidden source field -->
+                    <input type="hidden" id="source" value="website">
+
+                    <button type="submit" class="btn-primary" id="submitBtn">Get Free Demo</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast" id="toastMessage">Success! We will contact you soon.</div>
+
+    <script>
+        document.getElementById('leadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerText;
+            btn.innerText = 'Submitting...';
+            btn.disabled = true;
+
+            const payload = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                business_type: document.getElementById('business_type').value,
+                source: document.getElementById('source').value
+            };
+
+            try {
+                const response = await fetch('/api/leads/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    showToast('Lead submitted successfully! Check your console for notifications.', 'success');
+                    document.getElementById('leadForm').reset();
+                } else {
+                    const errorData = await response.json();
+                    let errMsg = 'Something went wrong.';
+                    if (errorData.non_field_errors) {
+                        errMsg = errorData.non_field_errors[0];
+                    } else {
+                        const firstKey = Object.keys(errorData)[0];
+                        errMsg = `${firstKey}: ${errorData[firstKey][0]}`;
+                    }
+                    showToast(errMsg, 'error');
+                }
+            } catch (err) {
+                showToast('Network error, please try again.', 'error');
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toastMessage');
+            toast.innerText = message;
+            if (type === 'error') {
+                toast.classList.add('error');
+            } else {
+                toast.classList.remove('error');
+            }
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
