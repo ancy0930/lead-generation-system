@@ -1,3 +1,15 @@
+# 🚀 UAE Lead Management System SaaS
+
+A production-ready multi-tenant CRM system that helps businesses capture, track, and convert leads efficiently.
+
+## 🔥 Features
+- Lead capture & tracking
+- WhatsApp & Email automation
+- Multi-tenant SaaS architecture
+- Dashboard analytics
+- Celery async processing
+
+
 # UAE Lead Management System SaaS
 
 Welcome to the UAE Lead Management System! The project is an enterprise-grade, Multi-tenant CRM that incorporates JWT Authentication, Celery asynchronous notifications, Redis caching, robust structured logging, and an advanced Metrics API. 
